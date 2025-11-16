@@ -1,0 +1,39 @@
+/* Smooth transition for navbar */
+nav {
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 70px;
+  overflow: hidden;
+}
+
+/* Ensure navbar stays on top */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  margin: 1rem;
+  width: calc(100% - 2rem);
+}
+
+/* Enhanced transparency effect */
+nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+  z-index: -1;
+  border-radius: 70px;
+}
+
+/* Text shadow for better readability */
+nav a {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+

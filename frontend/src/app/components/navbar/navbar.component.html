@@ -1,0 +1,22 @@
+<nav [class]="isScrolled 
+  ? 'fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-lg shadow-md transition-all duration-300' 
+  : 'fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-md transition-all duration-300'">
+  <div class="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4">
+    <div class="flex items-center justify-center">
+      <div class="flex items-center flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+        <a 
+          *ngFor="let item of menuItems" 
+          [routerLink]="item.route"
+          (click)="setActive(item)"
+          [class]="item.active 
+            ? 'text-white border-b-2 border-yellow-400 pb-1 font-semibold drop-shadow-lg' 
+            : 'text-white/90 hover:text-white transition-all duration-300 drop-shadow-md'"
+          class="cursor-pointer text-xs sm:text-sm md:text-base relative group whitespace-nowrap">
+          {{ item.label }}
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full" 
+                [class.w-full]="item.active"></span>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
