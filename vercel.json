@@ -1,7 +1,7 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/pariwisata-frontend/browser",
-  "installCommand": "npm install",
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist/pariwisata-frontend/browser",
+  "installCommand": "cd frontend && npm install",
   "framework": null,
   "rewrites": [
     {
