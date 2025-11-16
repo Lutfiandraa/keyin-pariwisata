@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DestinationService, Destination } from '../../services/destination.service';
-import { DestinationModalComponent } from '../destination-modal/destination-modal.component';
+import { CarModalComponent, Car } from '../car-modal/car-modal.component';
 
 @Component({
   selector: 'app-car-rentals',
   standalone: true,
-  imports: [CommonModule, DestinationModalComponent],
+  imports: [CommonModule, CarModalComponent],
   template: `
     <div class="relative min-h-screen overflow-hidden">
       <!-- Background Image with Overlay -->
@@ -40,7 +39,7 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
               </div>
               <div class="p-3 sm:p-4 bg-white">
                 <h3 class="text-sm sm:text-base font-bold text-gray-900 tracking-tight line-clamp-1 mb-3">{{ car.name }}</h3>
-                <button (click)="openDestinationModal(car.name)" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 px-3 sm:px-4 rounded-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm">
+                <button (click)="openCarModal(car.id)" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 px-3 sm:px-4 rounded-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm">
                   View Details
                 </button>
               </div>
@@ -48,32 +47,33 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
           </div>
         </div>
       </div>
-      
-      <!-- Destination Modal -->
-      <app-destination-modal 
-        [destination]="selectedDestination" 
-        (close)="closeModal()">
-      </app-destination-modal>
     </div>
+    
+    <!-- Car Modal - Outside container for proper z-index -->
+    <app-car-modal 
+      [car]="selectedCar" 
+      (close)="closeModal()">
+    </app-car-modal>
   `,
   styleUrl: './car-rentals.component.css'
 })
 export class CarRentalsComponent {
-  selectedDestination: Destination | null = null;
+  selectedCar: Car | null = null;
 
-  constructor(private destinationService: DestinationService) {}
-
-  openDestinationModal(carName: string) {
-    // For cars, we might want to show a different modal or just use the service
-    // For now, we'll try to find a matching destination or show car info
-    const destination = this.destinationService.getDestinationByName(carName);
-    if (destination) {
-      this.selectedDestination = destination;
+  openCarModal(carId: number) {
+    console.log('Opening car modal for ID:', carId);
+    const car = this.carDetails.find(c => c.id === carId);
+    console.log('Found car:', car);
+    if (car) {
+      this.selectedCar = car;
+      console.log('Selected car set to:', this.selectedCar);
+    } else {
+      console.log('Car not found for ID:', carId);
     }
   }
 
   closeModal() {
-    this.selectedDestination = null;
+    this.selectedCar = null;
   }
 
   cars = [
@@ -111,6 +111,64 @@ export class CarRentalsComponent {
       price: '$5,42k',
       duration: '10 Days Trip',
       image: 'assets/bmw720.png'
+    }
+  ];
+
+  carDetails: Car[] = [
+    {
+      id: 1,
+      name: 'Mercedes-Benz Sprinter',
+      type: 'Luxury Van / Minibus',
+      capacity: '12-15 Penumpang',
+      transmission: 'Automatic',
+      features: ['AC Dingin', 'Audio System', 'Kursi Nyaman', 'Bagasi Luas', 'Safety Features'],
+      description: 'Mercedes-Benz Sprinter adalah van mewah yang ideal untuk perjalanan kelompok besar. Dengan kapasitas hingga 15 penumpang, kendaraan ini menawarkan kenyamanan maksimal dengan fitur premium dan ruang yang luas. Cocok untuk perjalanan wisata, acara perusahaan, atau transportasi kelompok.',
+      image: 'assets/sprinter.png',
+      price: '$5,42k'
+    },
+    {
+      id: 2,
+      name: 'Mercedes-Benz V Class',
+      type: 'Luxury MPV',
+      capacity: '7-8 Penumpang',
+      transmission: 'Automatic',
+      features: ['AC Premium', 'Leather Seats', 'Entertainment System', 'Panoramic Roof', 'Premium Sound'],
+      description: 'Mercedes-Benz V Class adalah MPV mewah yang menggabungkan kenyamanan sedan premium dengan ruang yang luas. Dengan interior mewah, kursi kulit premium, dan teknologi canggih, V Class adalah pilihan sempurna untuk perjalanan bisnis atau keluarga yang mengutamakan kenyamanan.',
+      image: 'assets/vclass.png',
+      price: '$5,42k'
+    },
+    {
+      id: 3,
+      name: 'Hyundai Staria',
+      type: 'Modern MPV',
+      capacity: '7-9 Penumpang',
+      transmission: 'Automatic',
+      features: ['AC Dual Zone', 'Touchscreen Display', 'Safety Assist', 'Spacious Interior', 'Modern Design'],
+      description: 'Hyundai Staria adalah MPV modern dengan desain futuristik dan teknologi terkini. Menawarkan ruang kabin yang sangat luas, fitur keselamatan lengkap, dan kenyamanan premium. Ideal untuk perjalanan keluarga atau bisnis dengan desain yang stylish dan performa yang handal.',
+      image: 'assets/staria.png',
+      price: '$5,42k'
+    },
+    {
+      id: 4,
+      name: 'Mercedes-Benz S Class',
+      type: 'Luxury Sedan',
+      capacity: '4-5 Penumpang',
+      transmission: 'Automatic',
+      features: ['MBUX System', 'Massage Seats', 'Burmester Sound', 'Air Suspension', 'Driver Assist'],
+      description: 'Mercedes-Benz S Class adalah sedan mewah terdepan yang menawarkan pengalaman berkendara kelas dunia. Dengan teknologi MBUX canggih, kursi pijat, sistem audio Burmester premium, dan berbagai fitur keselamatan canggih, S Class adalah pilihan untuk mereka yang mengutamakan kemewahan dan teknologi.',
+      image: 'assets/sclass.png',
+      price: '$5,42k'
+    },
+    {
+      id: 5,
+      name: 'BMW 720',
+      type: 'Luxury Sedan',
+      capacity: '4-5 Penumpang',
+      transmission: 'Automatic',
+      features: ['iDrive System', 'Comfort Seats', 'Harman Kardon', 'Adaptive Suspension', 'BMW Assist'],
+      description: 'BMW 7 Series 720 adalah sedan mewah yang menawarkan performa dinamis dan kenyamanan premium. Dengan sistem iDrive terbaru, kursi comfort yang dapat disesuaikan, sistem audio Harman Kardon, dan teknologi BMW Assist, 720 memberikan pengalaman berkendara yang luar biasa dengan sentuhan sporty dan mewah.',
+      image: 'assets/bmw720.png',
+      price: '$5,42k'
     }
   ];
 }
