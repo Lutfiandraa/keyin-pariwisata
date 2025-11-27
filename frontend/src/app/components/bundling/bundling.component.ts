@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DestinationService, Destination } from '../../services/destination.service';
@@ -9,24 +9,24 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
   standalone: true,
   imports: [CommonModule, FormsModule, DestinationModalComponent],
   template: `
-    <div class="relative min-h-screen bg-gray-50">
+    <div class="relative min-h-screen bg-gray-50 dark:bg-[#1e1e1e]">
       <!-- Search Section -->
-      <div class="bg-white shadow-md">
+      <div class="bg-white dark:bg-[#252526] shadow-md">
         <div class="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
-          <div class="bg-white rounded-lg sm:rounded-xl border border-gray-200 p-3 sm:p-4 lg:p-6 shadow-lg">
+          <div class="bg-white dark:bg-[#252526] rounded-lg sm:rounded-xl border border-gray-200 dark:border-gray-700 p-3 sm:p-4 lg:p-6 shadow-lg">
             <!-- Trip Type Selection -->
             <div class="flex flex-wrap gap-3 sm:gap-4 mb-3 sm:mb-4">
               <label class="flex items-center cursor-pointer">
                 <input type="radio" name="tripType" value="round-trip" [(ngModel)]="tripType" class="mr-1.5 sm:mr-2">
-                <span class="text-xs sm:text-sm font-medium text-gray-700">Round-trip</span>
+                <span class="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200">Round-trip</span>
               </label>
               <label class="flex items-center cursor-pointer">
                 <input type="radio" name="tripType" value="one-way" [(ngModel)]="tripType" class="mr-1.5 sm:mr-2">
-                <span class="text-xs sm:text-sm font-medium text-gray-700">One-way</span>
+                <span class="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200">One-way</span>
               </label>
               <label class="flex items-center cursor-pointer">
                 <input type="checkbox" [(ngModel)]="nonstopOnly" class="mr-1.5 sm:mr-2">
-                <span class="text-xs sm:text-sm font-medium text-gray-700">Nonstop</span>
+                <span class="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-200">Nonstop</span>
               </label>
             </div>
 
@@ -34,18 +34,33 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
             <div class="grid grid-cols-1 md:grid-cols-5 gap-3 sm:gap-4">
               <!-- From -->
               <div class="md:col-span-2">
-                <label class="block text-xs font-semibold text-gray-600 mb-1">From</label>
+                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">From</label>
                 <div class="relative">
                   <input 
                     type="text" 
                     [(ngModel)]="fromLocation"
+                    (input)="onFromInput()"
+                    (focus)="showFromSuggestions = true"
+                    (blur)="onFromBlur()"
                     placeholder="City or airport"
-                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                  <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
+                  <button 
+                    *ngIf="fromLocation"
+                    (click)="clearFromLocation()"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                   </button>
+                  <!-- Suggestions Dropdown -->
+                  <div *ngIf="showFromSuggestions && fromSuggestions.length > 0" 
+                       class="absolute z-50 w-full mt-1 bg-white dark:bg-[#252526] border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div *ngFor="let suggestion of fromSuggestions" 
+                         (click)="selectFromLocation(suggestion.name)"
+                         class="px-4 py-2 hover:bg-yellow-50 dark:hover:bg-[#2d2d30] cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                      <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ suggestion.name }}</p>
+                    </div>
+                  </div>
                 </div>
                 <p class="text-xs text-gray-500 mt-1">All airports</p>
               </div>
@@ -61,58 +76,86 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
 
               <!-- To -->
               <div class="md:col-span-2">
-                <label class="block text-xs font-semibold text-gray-600 mb-1">To</label>
+                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">To</label>
                 <div class="relative">
                   <input 
                     type="text" 
                     [(ngModel)]="toLocation"
+                    (input)="onToInput()"
+                    (focus)="showToSuggestions = true"
+                    (blur)="onToBlur()"
                     placeholder="City or airport"
-                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                  <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
+                  <button 
+                    *ngIf="toLocation"
+                    (click)="clearToLocation()"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                   </button>
+                  <!-- Suggestions Dropdown -->
+                  <div *ngIf="showToSuggestions && toSuggestions.length > 0" 
+                       class="absolute z-50 w-full mt-1 bg-white dark:bg-[#252526] border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    <div *ngFor="let suggestion of toSuggestions" 
+                         (click)="selectToLocation(suggestion.name)"
+                         class="px-4 py-2 hover:bg-yellow-50 dark:hover:bg-[#2d2d30] cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0">
+                      <p class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ suggestion.name }}</p>
+                    </div>
+                  </div>
                 </div>
                 <p class="text-xs text-gray-500 mt-1">All airports</p>
               </div>
             </div>
 
             <!-- Dates and Passengers -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-3 sm:mt-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mt-3 sm:mt-4">
               <!-- Departure Date -->
-              <div>
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Departure</label>
+              <div class="lg:col-span-1">
+                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Departure</label>
                 <input 
                   type="date" 
                   [(ngModel)]="departureDate"
-                  class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100">
               </div>
 
               <!-- Return Date (if round-trip) -->
-              <div *ngIf="tripType === 'round-trip'">
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Return</label>
+              <div *ngIf="tripType === 'round-trip'" class="lg:col-span-1">
+                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Return</label>
                 <input 
                   type="date" 
                   [(ngModel)]="returnDate"
-                  class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                  class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100">
               </div>
 
-              <!-- Passengers -->
-              <div>
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Passengers</label>
-                <select 
-                  [(ngModel)]="passengers"
-                  class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                  <option value="1">1 Adult · Economy</option>
-                  <option value="2">2 Adults · Economy</option>
-                  <option value="3">3 Adults · Economy</option>
-                  <option value="4">4 Adults · Economy</option>
-                </select>
+              <!-- Passengers Dropdown -->
+              <div class="lg:col-span-1 passenger-dropdown-container">
+                <label class="block text-xs font-semibold text-gray-600 dark:text-gray-300 mb-1">Passengers</label>
+                <div class="relative">
+                  <button 
+                    (click)="togglePassengerDropdown()"
+                    class="w-full px-3 py-2 text-sm text-left border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 flex items-center justify-between">
+                    <span>{{ getPassengerText() }}</span>
+                    <svg class="w-4 h-4 text-gray-500 transition-transform duration-200" [class.rotate-180]="showPassengerDropdown" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </button>
+                  <!-- Dropdown Menu -->
+                  <div *ngIf="showPassengerDropdown" 
+                       class="absolute z-50 w-full mt-1 bg-white dark:bg-[#252526] border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg">
+                    <div *ngFor="let option of passengerOptions" 
+                         (click)="selectPassenger(option.value)"
+                         class="px-3 py-2 hover:bg-yellow-50 dark:hover:bg-[#2d2d30] cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0 text-sm">
+                      <span [class.font-semibold]="passengers === option.value" [class.text-yellow-600]="passengers === option.value" class="text-gray-900 dark:text-gray-100">
+                        {{ option.label }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <!-- Search Button -->
-              <div class="flex items-end sm:col-span-2 md:col-span-1">
+              <div class="flex items-end sm:col-span-2 lg:col-span-2">
                 <button 
                   (click)="onSearch()"
                   class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2">
@@ -137,7 +180,7 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
         <!-- Grid Layout for Bundling Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6" *ngIf="bundlingPackages.length > 0">
           <div *ngFor="let pkg of bundlingPackages; let i = index" 
-               class="bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden card-hover animate-pop-in" 
+                 class="bg-white dark:bg-[#252526] rounded-xl border border-gray-200 dark:border-gray-700 shadow-md overflow-hidden card-hover animate-pop-in"
                [class]="'stagger-' + (i + 1)"
                style="opacity: 0; animation-fill-mode: forwards;">
             <!-- Sliding Photo Carousel -->
@@ -249,6 +292,24 @@ export class BundlingComponent implements OnInit {
   selectedDestination: Destination | null = null;
   bundlingPackages: any[] = [];
 
+  // Autocomplete suggestions
+  fromSuggestions: Destination[] = [];
+  toSuggestions: Destination[] = [];
+  showFromSuggestions: boolean = false;
+  showToSuggestions: boolean = false;
+  showPassengerDropdown: boolean = false;
+
+  // Passenger options
+  passengerOptions = [
+    { value: '1', label: '1 Adult · Economy' },
+    { value: '2', label: '2 Adults · Economy' },
+    { value: '3', label: '3 Adults · Economy' },
+    { value: '4', label: '4 Adults · Economy' }
+  ];
+
+  // All available destinations from Recommend
+  private allDestinations: Destination[] = [];
+
   // Random destinations from Recommend
   private recommendDestinations = [
     { name: 'Mecca', image: 'assets/kabah.png' },
@@ -268,9 +329,19 @@ export class BundlingComponent implements OnInit {
 
   constructor(private destinationService: DestinationService) {}
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.passenger-dropdown-container')) {
+      this.showPassengerDropdown = false;
+    }
+  }
+
   ngOnInit() {
     this.setDefaultDates();
     this.generateRandomPackages();
+    // Get all destinations from service (same as Recommend)
+    this.allDestinations = this.destinationService.getAllDestinations();
   }
 
   setDefaultDates() {
@@ -389,16 +460,148 @@ export class BundlingComponent implements OnInit {
     this.toLocation = temp;
   }
 
+  // Autocomplete methods
+  onFromInput() {
+    if (this.fromLocation.trim()) {
+      this.fromSuggestions = this.destinationService.searchDestinations(this.fromLocation);
+      this.showFromSuggestions = true;
+    } else {
+      this.fromSuggestions = [];
+      this.showFromSuggestions = false;
+    }
+  }
+
+  onToInput() {
+    if (this.toLocation.trim()) {
+      this.toSuggestions = this.destinationService.searchDestinations(this.toLocation);
+      this.showToSuggestions = true;
+    } else {
+      this.toSuggestions = [];
+      this.showToSuggestions = false;
+    }
+  }
+
+  selectFromLocation(name: string) {
+    this.fromLocation = name;
+    this.showFromSuggestions = false;
+    this.fromSuggestions = [];
+  }
+
+  selectToLocation(name: string) {
+    this.toLocation = name;
+    this.showToSuggestions = false;
+    this.toSuggestions = [];
+  }
+
+  clearFromLocation() {
+    this.fromLocation = '';
+    this.fromSuggestions = [];
+    this.showFromSuggestions = false;
+  }
+
+  clearToLocation() {
+    this.toLocation = '';
+    this.toSuggestions = [];
+    this.showToSuggestions = false;
+  }
+
+  onFromBlur() {
+    // Delay to allow click on suggestion
+    setTimeout(() => {
+      this.showFromSuggestions = false;
+    }, 200);
+  }
+
+  onToBlur() {
+    // Delay to allow click on suggestion
+    setTimeout(() => {
+      this.showToSuggestions = false;
+    }, 200);
+  }
+
+  // Passenger dropdown methods
+  togglePassengerDropdown() {
+    this.showPassengerDropdown = !this.showPassengerDropdown;
+  }
+
+  selectPassenger(value: string) {
+    this.passengers = value;
+    this.showPassengerDropdown = false;
+  }
+
+  getPassengerText(): string {
+    const option = this.passengerOptions.find(opt => opt.value === this.passengers);
+    return option ? option.label : '1 Adult · Economy';
+  }
+
+  // Search validation and logic
   onSearch() {
-    // Search logic can be implemented here
+    // Validate destinations
+    const fromDest = this.destinationService.getDestinationByName(this.fromLocation);
+    const toDest = this.destinationService.getDestinationByName(this.toLocation);
+
+    if (!this.fromLocation.trim() || !this.toLocation.trim()) {
+      alert('Please select both From and To destinations');
+      return;
+    }
+
+    if (!fromDest) {
+      alert(`"${this.fromLocation}" is not a valid destination. Please select from the suggestions.`);
+      return;
+    }
+
+    if (!toDest) {
+      alert(`"${this.toLocation}" is not a valid destination. Please select from the suggestions.`);
+      return;
+    }
+
+    if (fromDest.name === toDest.name) {
+      alert('From and To destinations cannot be the same');
+      return;
+    }
+
+    if (!this.departureDate) {
+      alert('Please select a departure date');
+      return;
+    }
+
+    if (this.tripType === 'round-trip' && !this.returnDate) {
+      alert('Please select a return date');
+      return;
+    }
+
+    // Filter bundling packages based on search
+    this.filterPackagesBySearch(fromDest.name, toDest.name);
+
+    // Log search details
     console.log('Searching for:', {
-      from: this.fromLocation,
-      to: this.toLocation,
+      from: fromDest.name,
+      to: toDest.name,
       departure: this.departureDate,
       return: this.returnDate,
       passengers: this.passengers,
       tripType: this.tripType
     });
+
+    // Optionally open destination modal for "To" destination
+    this.selectedDestination = toDest;
+  }
+
+  filterPackagesBySearch(from: string, to: string) {
+    // Filter packages that match the search criteria
+    const filtered = this.bundlingPackages.filter(pkg => 
+      (pkg.destination1 === from || pkg.destination2 === from) &&
+      (pkg.destination1 === to || pkg.destination2 === to)
+    );
+
+    // If no exact match, show all packages (or regenerate with new destinations)
+    if (filtered.length === 0) {
+      // Keep showing all packages, or you could regenerate based on search
+      console.log('No exact package match found, showing all packages');
+    } else {
+      // Optionally filter to show only matching packages
+      // this.bundlingPackages = filtered;
+    }
   }
 
   openDestinationModal(destinationName: string) {

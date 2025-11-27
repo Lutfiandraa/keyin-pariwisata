@@ -1,8 +1,10 @@
-<nav [class]="isScrolled 
+<nav [class]="(isScrolled 
   ? 'fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-lg shadow-md transition-all duration-300' 
-  : 'fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-md transition-all duration-300'">
-  <div class="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4">
-    <div class="flex items-center justify-center">
+  : 'fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-md transition-all duration-300') + 
+  (isNavbarVisible ? ' navbar-visible' : ' navbar-hidden')">
+  <div class="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 relative">
+    <div class="flex items-center justify-center relative">
+      <!-- Menu Items (centered) -->
       <div class="flex items-center flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8">
         <a 
           *ngFor="let item of menuItems" 
@@ -17,6 +19,61 @@
                 [class.w-full]="item.active"></span>
         </a>
       </div>
+      <!-- Dark Mode Toggle Button (right side, absolute positioned) -->
+      <button 
+        (click)="toggleDarkMode()"
+        class="absolute right-0 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white/90 hover:text-white transition-all duration-300 cursor-pointer group p-1"
+        title="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}">
+        <!-- Sun Icon (Light Mode) -->
+        <svg 
+          *ngIf="!isDarkMode"
+          class="w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 drop-shadow-md group-hover:scale-110"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <!-- Moon Icon (Dark Mode) -->
+        <svg 
+          *ngIf="isDarkMode"
+          class="w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 drop-shadow-md group-hover:scale-110"
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+      </button>
     </div>
   </div>
 </nav>
+
+<!-- Arrow Hide Button (shown when navbar is visible, below navbar) -->
+<button 
+  *ngIf="isNavbarVisible"
+  (click)="toggleNavbar()"
+  class="navbar-toggle-button fixed left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white cursor-pointer z-40 group p-2"
+  style="top: calc(1rem + 70px);">
+  <svg 
+    class="w-8 h-3 transition-transform duration-300 drop-shadow-lg" 
+    fill="none" 
+    stroke="currentColor" 
+    viewBox="0 0 24 24"
+    preserveAspectRatio="none">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+  </svg>
+</button>
+
+<!-- Arrow Unhide Button (shown when navbar is hidden, at top of page) -->
+<button 
+  *ngIf="!isNavbarVisible"
+  (click)="toggleNavbar()"
+  class="navbar-toggle-button fixed top-4 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white cursor-pointer z-50 group p-2">
+  <svg 
+    class="w-8 h-3 transition-transform duration-300 drop-shadow-lg rotate-180" 
+    fill="none" 
+    stroke="currentColor" 
+    viewBox="0 0 24 24"
+    preserveAspectRatio="none">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+  </svg>
+</button>

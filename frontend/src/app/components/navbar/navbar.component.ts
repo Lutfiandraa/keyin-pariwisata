@@ -12,6 +12,11 @@ import { filter } from 'rxjs/operators';
 })
 export class NavbarComponent implements OnInit {
   isScrolled = false;
+  isNavbarVisible = true;
+  isManuallyHidden = false; // Track manual hide state
+  lastScrollTop = 0;
+  scrollThreshold = 10; // Minimum scroll distance to trigger hide/show
+  isDarkMode = false; // Dark mode state
   menuItems = [
     { label: 'Home', route: '/', active: false },
     { label: 'Recommend', route: '/recommend', active: false },
@@ -23,8 +28,40 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
+    // Don't auto-hide/show if manually controlled
+    if (this.isManuallyHidden) {
+      return;
+    }
+
     const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    
+    // Update isScrolled for background change
     this.isScrolled = scrollPosition > 50;
+    
+    // Hide/show navbar based on scroll direction
+    if (scrollPosition < this.scrollThreshold) {
+      // At the top, always show navbar
+      this.isNavbarVisible = true;
+    } else if (scrollPosition > this.lastScrollTop && scrollPosition > 100) {
+      // Scrolling down and past 100px - hide navbar
+      this.isNavbarVisible = false;
+    } else if (scrollPosition < this.lastScrollTop) {
+      // Scrolling up - show navbar
+      this.isNavbarVisible = true;
+    }
+    
+    // Update last scroll position
+    this.lastScrollTop = scrollPosition <= 0 ? 0 : scrollPosition;
+  }
+
+  toggleNavbar() {
+    if (this.isNavbarVisible) {
+      this.isManuallyHidden = true;
+      this.isNavbarVisible = false;
+    } else {
+      this.isManuallyHidden = false;
+      this.isNavbarVisible = true;
+    }
   }
 
   ngOnInit() {
@@ -37,6 +74,30 @@ export class NavbarComponent implements OnInit {
       .subscribe((event: any) => {
         this.updateActiveRoute(event.url);
       });
+
+    // Load dark mode preference from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      this.isDarkMode = true;
+      this.applyDarkMode(true);
+    } else {
+      this.isDarkMode = false;
+      this.applyDarkMode(false);
+    }
+  }
+
+  toggleDarkMode() {
+    this.isDarkMode = !this.isDarkMode;
+    this.applyDarkMode(this.isDarkMode);
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+  }
+
+  applyDarkMode(isDark: boolean) {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }
 
   updateActiveRoute(url: string) {

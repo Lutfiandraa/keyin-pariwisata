@@ -22,7 +22,7 @@ export interface Car {
          class="fixed inset-0 z-[9999] flex items-center justify-center p-2 sm:p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
          style="position: fixed; z-index: 9999;"
          (click)="closeModal()">
-      <div class="bg-white rounded-lg sm:rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] overflow-y-auto animate-pop-in"
+      <div class="bg-white dark:bg-[#252526] rounded-lg sm:rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] sm:max-h-[85vh] overflow-y-auto animate-pop-in"
            (click)="$event.stopPropagation()">
         <!-- Header with Image -->
         <div class="relative h-48 sm:h-56 overflow-hidden">
@@ -30,7 +30,7 @@ export interface Car {
                class="w-full h-full object-cover">
           <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
           <button (click)="closeModal()" 
-                  class="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white/90 hover:bg-white text-gray-900 rounded-full p-1.5 sm:p-2 transition-all duration-300 transform hover:scale-110 shadow-lg">
+                  class="absolute top-2 right-2 sm:top-3 sm:right-3 bg-white/90 dark:bg-[#2d2d30]/90 hover:bg-white dark:hover:bg-[#2d2d30] text-gray-900 dark:text-gray-100 rounded-full p-1.5 sm:p-2 transition-all duration-300 transform hover:scale-110 shadow-lg">
             <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>
@@ -45,22 +45,22 @@ export interface Car {
         <div class="p-4 sm:p-5 lg:p-6">
           <!-- Specifications -->
           <div class="grid grid-cols-2 gap-4 mb-5 sm:mb-6">
-            <div class="bg-gray-50 rounded-lg p-3 sm:p-4">
-              <div class="text-xs sm:text-sm text-gray-600 mb-1">Kapasitas</div>
-              <div class="text-base sm:text-lg font-bold text-gray-900">{{ car.capacity }}</div>
+            <div class="bg-gray-50 dark:bg-[#1e1e1e] rounded-lg p-3 sm:p-4">
+              <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Kapasitas</div>
+              <div class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">{{ car.capacity }}</div>
             </div>
-            <div class="bg-gray-50 rounded-lg p-3 sm:p-4">
-              <div class="text-xs sm:text-sm text-gray-600 mb-1">Transmisi</div>
-              <div class="text-base sm:text-lg font-bold text-gray-900">{{ car.transmission }}</div>
+            <div class="bg-gray-50 dark:bg-[#1e1e1e] rounded-lg p-3 sm:p-4">
+              <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Transmisi</div>
+              <div class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">{{ car.transmission }}</div>
             </div>
           </div>
 
           <!-- Features -->
           <div class="mb-5 sm:mb-6">
-            <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-3">Fitur Utama</h3>
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">Fitur Utama</h3>
             <div class="flex flex-wrap gap-2">
               <span *ngFor="let feature of car.features" 
-                    class="bg-yellow-100 text-yellow-800 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full">
+                    class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full">
                 {{ feature }}
               </span>
             </div>
@@ -68,14 +68,14 @@ export interface Car {
 
           <!-- Description -->
           <div class="mb-5 sm:mb-6">
-            <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-2">Deskripsi</h3>
-            <p class="text-gray-700 leading-relaxed text-sm sm:text-base">{{ car.description }}</p>
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Deskripsi</h3>
+            <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm sm:text-base">{{ car.description }}</p>
           </div>
 
           <!-- Price -->
-          <div class="bg-yellow-50 border-2 border-yellow-200 rounded-lg p-4 mb-5 sm:mb-6">
-            <div class="text-xs sm:text-sm text-gray-600 mb-1">Harga Sewa</div>
-            <div class="text-2xl sm:text-3xl font-bold text-gray-900">{{ car.price }}</div>
+          <div class="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-5 sm:mb-6">
+            <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Harga Sewa</div>
+            <div class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{{ car.price }}</div>
           </div>
           
           <!-- Action Buttons -->
@@ -84,7 +84,7 @@ export interface Car {
               Book Now
             </button>
             <button (click)="closeModal()" 
-                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold px-4 py-2.5 sm:px-5 sm:py-3 rounded-lg transition-all duration-300 text-sm sm:text-base">
+                    class="flex-1 bg-gray-200 dark:bg-[#3e3e42] hover:bg-gray-300 dark:hover:bg-[#454545] text-gray-900 dark:text-gray-100 font-semibold px-4 py-2.5 sm:px-5 sm:py-3 rounded-lg transition-all duration-300 text-sm sm:text-base">
               Close
             </button>
           </div>

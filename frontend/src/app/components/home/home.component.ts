@@ -10,7 +10,7 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, DestinationModalComponent],
   template: `
-    <div class="relative min-h-screen bg-gray-50">
+    <div class="relative min-h-screen bg-gray-50 dark:bg-[#1e1e1e]">
       <!-- Hero Section with Search Bar -->
       <div class="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] overflow-hidden">
       <!-- Background Image -->
@@ -34,28 +34,28 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
             </p>
 
             <!-- Search Bar -->
-            <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-3 sm:p-4 lg:p-6">
+            <div class="bg-white dark:bg-[#252526] rounded-xl sm:rounded-2xl shadow-2xl p-3 sm:p-4 lg:p-6">
               <div class="flex flex-col md:flex-row gap-3 sm:gap-4">
                 <div class="flex-1">
-                  <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Destination</label>
+                  <label class="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1 sm:mb-2">Destination</label>
                   <input 
                     type="text" 
                     [(ngModel)]="searchQuery"
                     (keyup.enter)="onSearch()"
                     placeholder="Where are you going?"
-                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
                 </div>
                 <div class="md:w-48">
-                  <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Check-in</label>
+                  <label class="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1 sm:mb-2">Check-in</label>
                   <input 
                     type="date" 
-                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100">
                 </div>
                 <div class="md:w-48">
-                  <label class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1 sm:mb-2">Check-out</label>
+                  <label class="block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1 sm:mb-2">Check-out</label>
                   <input 
                     type="date" 
-                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                    class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100">
                 </div>
                 <div class="flex items-end">
                   <button (click)="onSearch()" class="w-full md:w-auto bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
@@ -72,14 +72,14 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
       <div class="container mx-auto px-3 sm:px-4 lg:px-8 py-8 sm:py-10 lg:py-12">
         <!-- Section Title -->
         <div class="mb-6 sm:mb-8">
-          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Popular Destinations</h2>
-          <p class="text-sm sm:text-base text-gray-600">Explore these amazing places</p>
+          <h2 class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1 sm:mb-2">Popular Destinations</h2>
+          <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400">Explore these amazing places</p>
               </div>
 
         <!-- Grid Layout for Cards -->
         <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
           <div *ngFor="let tour of tours; let i = index" 
-               class="bg-white rounded-xl shadow-lg overflow-hidden card-hover animate-pop-in" 
+               class="bg-white dark:bg-[#252526] rounded-xl shadow-lg overflow-hidden card-hover animate-pop-in" 
                [class]="'stagger-' + (i + 1)"
                style="opacity: 0; animation-fill-mode: forwards;">
             <div class="h-[140px] sm:h-[160px] md:h-[180px] lg:h-[200px] overflow-hidden relative group">

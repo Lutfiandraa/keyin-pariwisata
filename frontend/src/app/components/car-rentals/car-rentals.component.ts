@@ -29,7 +29,7 @@ import { CarModalComponent, Car } from '../car-modal/car-modal.component';
         <div class="flex-1 flex items-start justify-start px-3 sm:px-4 md:px-6 lg:px-12 pb-12 sm:pb-16 lg:pb-20">
           <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 w-full">
             <div *ngFor="let car of cars; let i = index" 
-                 class="bg-white rounded-2xl shadow-2xl overflow-hidden card-hover animate-pop-in" 
+                 class="bg-white dark:bg-[#252526] rounded-2xl shadow-2xl overflow-hidden card-hover animate-pop-in" 
                  [class]="'stagger-' + (i + 1)"
                  style="opacity: 0; animation-fill-mode: forwards;">
               <div class="h-[140px] sm:h-[160px] md:h-[180px] lg:h-[200px] overflow-hidden relative group">
@@ -37,8 +37,8 @@ import { CarModalComponent, Car } from '../car-modal/car-modal.component';
                      class="w-full h-full object-cover image-zoom">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <div class="p-3 sm:p-4 bg-white">
-                <h3 class="text-sm sm:text-base font-bold text-gray-900 tracking-tight line-clamp-1 mb-3">{{ car.name }}</h3>
+              <div class="p-3 sm:p-4 bg-white dark:bg-[#252526]">
+                <h3 class="text-sm sm:text-base font-bold text-gray-900 dark:text-gray-100 tracking-tight line-clamp-1 mb-3">{{ car.name }}</h3>
                 <button (click)="openCarModal(car.id)" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 px-3 sm:px-4 rounded-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm">
                   View Details
                 </button>

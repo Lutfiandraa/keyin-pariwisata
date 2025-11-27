@@ -8,20 +8,13 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
   standalone: true,
   imports: [CommonModule, DestinationModalComponent],
   template: `
-    <div class="relative min-h-screen overflow-hidden">
-      <!-- Background Image with Overlay -->
-      <div 
-        class="fixed inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 ease-out"
-        style="background-image: url(assets/default.png); transform: scale(1.05);">
-        <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30"></div>
-      </div>
-
-      <!-- Content Overlay -->
+    <div class="relative min-h-screen bg-gray-50 dark:bg-[#1e1e1e]">
+      <!-- Content -->
       <div class="relative z-10 min-h-screen flex flex-col">
         <!-- Title Section with Animation -->
         <div class="pt-20 sm:pt-24 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-12 animate-fade-in-up">
-          <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal leading-tight text-white drop-shadow-lg" 
-              style="font-family: 'Odor Mean Chey', serif; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+          <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal leading-tight text-gray-900 dark:text-gray-100" 
+              style="font-family: 'Odor Mean Chey', serif;">
             Recommended
           </h1>
         </div>
@@ -30,7 +23,7 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
         <div class="flex-1 flex items-start justify-start px-3 sm:px-4 md:px-6 lg:px-12 pb-12 sm:pb-16 lg:pb-20">
           <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 w-full">
             <div *ngFor="let tour of tours; let i = index" 
-                 class="bg-white rounded-2xl shadow-2xl overflow-hidden card-hover animate-pop-in" 
+                 class="bg-white dark:bg-[#252526] rounded-2xl shadow-2xl overflow-hidden card-hover animate-pop-in" 
                  [class]="'stagger-' + (i + 1)"
                  style="opacity: 0; animation-fill-mode: forwards;">
               <div class="h-[140px] sm:h-[160px] md:h-[180px] lg:h-[200px] overflow-hidden relative group">
@@ -38,8 +31,8 @@ import { DestinationModalComponent } from '../destination-modal/destination-moda
                      class="w-full h-full object-cover image-zoom">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
-              <div class="p-3 sm:p-4 bg-white">
-                <h3 class="text-sm sm:text-base font-bold text-gray-900 tracking-tight line-clamp-1 mb-3">{{ tour.name }}</h3>
+              <div class="p-3 sm:p-4 bg-white dark:bg-[#252526]">
+                <h3 class="text-sm sm:text-base font-bold text-gray-900 dark:text-gray-100 tracking-tight line-clamp-1 mb-3">{{ tour.name }}</h3>
                 <button (click)="openDestinationModal(tour.name)" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 px-3 sm:px-4 rounded-lg transition-all duration-300 transform hover:scale-105 text-xs sm:text-sm">
                   View Details
                 </button>

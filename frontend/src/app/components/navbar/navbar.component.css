@@ -37,3 +37,66 @@ nav a {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
+/* Dark mode toggle button styling */
+nav button[title] {
+  flex-shrink: 0;
+  min-width: 2rem;
+}
+
+/* Ensure navbar container doesn't expand */
+nav .container > div {
+  position: relative;
+  width: 100%;
+}
+
+/* Navbar visibility animations */
+.navbar-visible {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.navbar-hidden {
+  transform: translateY(calc(-100% - 2rem));
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.navbar-hidden > * {
+  pointer-events: none;
+}
+
+/* Arrow toggle button styling - positioned below navbar */
+.navbar-toggle-button {
+  pointer-events: auto;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out, top 0.3s ease-in-out;
+}
+
+.navbar-toggle-button:hover svg {
+  transform: scale(1.2);
+}
+
+.navbar-toggle-button:active svg {
+  transform: scale(0.9);
+}
+
+.navbar-toggle-button svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* Unhide button - at top when navbar is hidden */
+.navbar-toggle-button[class*="top-4"] {
+  top: 1rem !important;
+}
+
+.navbar-toggle-button[class*="top-4"]:hover svg {
+  transform: scale(1.2) rotate(180deg);
+}
+
+.navbar-toggle-button[class*="top-4"]:active svg {
+  transform: scale(0.9) rotate(180deg);
+}
+
