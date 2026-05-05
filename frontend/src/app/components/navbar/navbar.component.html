@@ -11,10 +11,13 @@
           [routerLink]="item.route"
           (click)="setActive(item)"
           [class]="item.active 
-            ? 'text-white border-b-2 border-yellow-400 pb-1 font-semibold drop-shadow-lg' 
-            : 'text-white/90 hover:text-white transition-all duration-300 drop-shadow-md'"
-          class="cursor-pointer text-xs sm:text-sm md:text-base relative group whitespace-nowrap">
-          {{ item.label }}
+            ? 'text-yellow-400 border-b-2 border-yellow-400 pb-1 font-medium drop-shadow-lg' 
+            : 'text-white/90 hover:text-yellow-400 transition-all duration-300 drop-shadow-md'"
+          class="cursor-pointer text-xs sm:text-sm md:text-base relative group whitespace-nowrap flex items-center">
+          <span *ngIf="!item.isIcon">{{ item.label }}</span>
+          <svg *ngIf="item.isIcon" class="w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300" [class.fill-yellow-400]="item.active" [class.text-yellow-400]="item.active" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full" 
                 [class.w-full]="item.active"></span>
         </a>
@@ -22,7 +25,7 @@
       <!-- Dark Mode Toggle Button (right side, absolute positioned) -->
       <button 
         (click)="toggleDarkMode()"
-        class="absolute right-0 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white/90 hover:text-white transition-all duration-300 cursor-pointer group p-1"
+        class="absolute right-0 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white/90 hover:text-yellow-400 transition-all duration-300 cursor-pointer group p-1"
         title="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}">
         <!-- Sun Icon (Light Mode) -->
         <svg 
@@ -51,7 +54,7 @@
 <button 
   *ngIf="isNavbarVisible"
   (click)="toggleNavbar()"
-  class="navbar-toggle-button fixed left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white cursor-pointer z-40 group p-2"
+  class="navbar-toggle-button fixed left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white/80 hover:text-yellow-400 cursor-pointer z-40 group p-2"
   style="top: calc(1rem + 70px);">
   <svg 
     class="w-8 h-3 transition-transform duration-300 drop-shadow-lg" 
@@ -67,7 +70,7 @@
 <button 
   *ngIf="!isNavbarVisible"
   (click)="toggleNavbar()"
-  class="navbar-toggle-button fixed top-4 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white cursor-pointer z-50 group p-2">
+  class="navbar-toggle-button fixed top-4 left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white/80 hover:text-yellow-400 cursor-pointer z-50 group p-2">
   <svg 
     class="w-8 h-3 transition-transform duration-300 drop-shadow-lg rotate-180" 
     fill="none" 

@@ -18,7 +18,7 @@ export class DestinationService {
       name: 'Mecca',
       image: 'assets/kabah.png',
       description: 'The holiest city in Islam, home to the Kaaba and the annual Hajj pilgrimage.',
-      article: 'Mecca, officially Makkah al-Mukarramah, is a city in Saudi Arabia and the holiest city in Islam. It is the birthplace of the Prophet Muhammad and the site of the Kaaba, the most sacred site in Islam. Every year, millions of Muslims from around the world perform the Hajj pilgrimage to Mecca. The city is home to the Grand Mosque (Masjid al-Haram), which surrounds the Kaaba. Mecca has been a center of Islamic worship for over 1,400 years and continues to be a symbol of unity for Muslims worldwide.'
+      article: 'Mecca, officially Makkah al-Mukarramah, is a city in Saudi Arabia and the holiest city in Islam. It is the birthplace of the Prophet Muhammad and the site of the Kaaba, the most sacred site in Islam. Every year, millions of Muslims from around the world perform the Hajj pilgrimage to Mecca. The city is home to the Grand Mosque (Masjid al-Haram), which surrounds the Kaaba. Mecca has been a centre of Islamic worship for over 1,400 years and continues to be a symbol of unity for Muslims worldwide.'
     },
     {
       id: 2,
@@ -59,8 +59,8 @@ export class DestinationService {
       id: 7,
       name: 'Cotswold',
       image: 'assets/cotswold.jpg',
-      description: 'A picturesque region in England known for its rolling hills, charming villages, and honey-colored stone cottages.',
-      article: 'The Cotswolds is an area of outstanding natural beauty in south-central England, covering parts of six counties. It is famous for its rolling hills, picturesque villages, and distinctive honey-colored limestone buildings. The region is dotted with charming market towns like Stow-on-the-Wold, Bourton-on-the-Water, and Chipping Campden. The Cotswolds offers scenic walking trails, historic gardens, and traditional English pubs. The area\'s rich history dates back to the Roman era, and many villages have preserved their medieval character. The Cotswolds is a popular destination for those seeking quintessential English countryside charm.'
+      description: 'A picturesque region in England known for its rolling hills, charming villages, and honey-coloured stone cottages.',
+      article: 'The Cotswolds is an area of outstanding natural beauty in south-central England, covering parts of six counties. It is famous for its rolling hills, picturesque villages, and distinctive honey-coloured limestone buildings. The region is dotted with charming market towns like Stow-on-the-Wold, Bourton-on-the-Water, and Chipping Campden. The Cotswolds offers scenic walking trails, historic gardens, and traditional English pubs. The area\'s rich history dates back to the Roman era, and many villages have preserved their medieval character. The Cotswolds is a popular destination for those seeking quintessential English countryside charm.'
     },
     {
       id: 8,
@@ -102,14 +102,14 @@ export class DestinationService {
       name: 'Monaco',
       image: 'assets/monaco.png',
       description: 'A tiny principality on the French Riviera, known for luxury, Formula 1, and glamorous lifestyle.',
-      article: 'Monaco is a sovereign city-state and microstate on the French Riviera in Western Europe. Despite being the second-smallest country in the world, Monaco is renowned for its wealth, luxury, and glamour. The principality is famous for the Monte Carlo Casino, the Formula 1 Monaco Grand Prix, and its yacht-filled harbor. Monaco\'s stunning Mediterranean coastline, mild climate, and tax advantages have made it a haven for the wealthy and famous. The country features beautiful gardens, the Prince\'s Palace, and world-class museums. Monaco\'s compact size means everything is within walking distance, making it a unique and exclusive destination for luxury travelers.'
+      article: 'Monaco is a sovereign city-state and microstate on the French Riviera in Western Europe. Despite being the second-smallest country in the world, Monaco is renowned for its wealth, luxury, and glamour. The principality is famous for the Monte Carlo Casino, the Formula 1 Monaco Grand Prix, and its yacht-filled harbor. Monaco\'s stunning Mediterranean coastline, mild climate, and tax advantages have made it a haven for the wealthy and famous. The country features beautiful gardens, the Prince\'s Palace, and world-class museums. Monaco\'s compact size means everything is within walking distance, making it a unique and exclusive destination for luxury travellers.'
     },
     {
       id: 14,
       name: 'Manhattan Penthouse',
       image: 'assets/manhattan.png',
       description: 'Luxury living in the heart of New York City, offering stunning skyline views and world-class amenities.',
-      article: 'Manhattan is the most densely populated borough of New York City and the economic and cultural heart of the city. A Manhattan penthouse represents the pinnacle of luxury urban living, offering breathtaking views of the iconic skyline, Central Park, and the surrounding cityscape. These exclusive residences feature high-end finishes, private terraces, and world-class amenities. Manhattan is home to world-renowned landmarks like Times Square, Central Park, the Empire State Building, and Broadway. The borough offers unparalleled access to fine dining, shopping, entertainment, and cultural institutions like the Metropolitan Museum of Art and the Museum of Modern Art. Living in a Manhattan penthouse means being at the center of one of the world\'s most vibrant and dynamic cities.'
+      article: 'Manhattan is the most densely populated borough of New York City and the economic and cultural heart of the city. A Manhattan penthouse represents the pinnacle of luxury urban living, offering breathtaking views of the iconic skyline, Central Park, and the surrounding cityscape. These exclusive residences feature high-end finishes, private terraces, and world-class amenities. Manhattan is home to world-renowned landmarks like Times Square, Central Park, the Empire State Building, and Broadway. The borough offers unparalleled access to fine dining, shopping, entertainment, and cultural institutions like the Metropolitan Museum of Art and the Museum of Modern Art. Living in a Manhattan penthouse means being at the centre of one of the world\'s most vibrant and dynamic cities.'
     }
   ];
 

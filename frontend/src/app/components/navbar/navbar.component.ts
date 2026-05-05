@@ -21,7 +21,8 @@ export class NavbarComponent implements OnInit {
     { label: 'Home', route: '/', active: false },
     { label: 'Recommend', route: '/recommend', active: false },
     { label: 'Bundling', route: '/bundling', active: false },
-    { label: 'Car Rentals', route: '/car-rentals', active: false }
+    { label: 'Car Rentals', route: '/car-rentals', active: false },
+    { label: 'Favorite', route: '/favorite', active: false, isIcon: true }
   ];
 
   constructor(private router: Router) {}

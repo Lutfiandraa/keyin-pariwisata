@@ -21,5 +21,9 @@ export const routes: Routes = [
   {
     path: 'car-rentals',
     loadComponent: () => import('./components/car-rentals/car-rentals.component').then(m => m.CarRentalsComponent)
+  },
+  {
+    path: 'favorite',
+    loadComponent: () => import('./components/favorite/favorite.component').then(m => m.FavoriteComponent)
   }
 ];

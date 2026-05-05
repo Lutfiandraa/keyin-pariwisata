@@ -38,7 +38,7 @@ import { Destination } from '../../services/destination.service';
           
           <!-- Action Buttons -->
           <div class="mt-5 sm:mt-6 flex flex-col sm:flex-row gap-3">
-            <button class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
+            <button (click)="onBook()" class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base">
               Book Now
             </button>
             <button (click)="closeModal()" 
@@ -63,6 +63,11 @@ import { Destination } from '../../services/destination.service';
 export class DestinationModalComponent {
   @Input() destination: Destination | null = null;
   @Output() close = new EventEmitter<void>();
+  @Output() book = new EventEmitter<void>();
+
+  onBook() {
+    this.book.emit();
+  }
 
   closeModal() {
     this.close.emit();
