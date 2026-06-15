@@ -1,58 +1,132 @@
 <nav [class]="(isScrolled 
   ? 'fixed top-0 left-0 right-0 z-50 bg-black/20 backdrop-blur-lg shadow-md transition-all duration-300' 
   : 'fixed top-0 left-0 right-0 z-50 bg-transparent backdrop-blur-md transition-all duration-300') + 
-  (isNavbarVisible ? ' navbar-visible' : ' navbar-hidden')">
-  <div class="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-4 relative">
-    <div class="flex items-center justify-center relative">
-      <!-- Menu Items (centered) -->
-      <div class="flex items-center flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+  (isNavbarVisible ? ' navbar-visible' : ' navbar-hidden') +
+  (isMobileMenuOpen ? ' navbar-expanded' : '')">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-3 relative">
+    <!-- Header Row -->
+    <div class="flex items-center justify-between relative">
+      <!-- Brand Logo -->
+      <a routerLink="/" class="flex items-center gap-2 cursor-pointer group z-50">
+        <img src="assets/KeyInLogo.png" alt="KeyIn Logo" class="h-8 w-auto transition-all duration-300 group-hover:scale-105">
+      </a>
+
+      <!-- Desktop Menu Items (centered / main navigation) -->
+      <div class="hidden md:flex items-center gap-6 lg:gap-8 mx-auto">
         <a 
           *ngFor="let item of menuItems" 
           [routerLink]="item.route"
           (click)="setActive(item)"
           [class]="item.active 
-            ? 'text-yellow-400 border-b-2 border-yellow-400 pb-1 font-medium drop-shadow-lg' 
-            : 'text-white/90 hover:text-yellow-400 transition-all duration-300 drop-shadow-md'"
-          class="cursor-pointer text-xs sm:text-sm md:text-base relative group whitespace-nowrap flex items-center">
+            ? 'text-yellow-400 border-b-2 border-yellow-400 pb-1 font-semibold drop-shadow-lg' 
+            : 'text-white/95 hover:text-yellow-400 transition-all duration-300 drop-shadow-md font-medium'"
+          class="cursor-pointer text-sm md:text-base relative group whitespace-nowrap flex items-center">
           <span *ngIf="!item.isIcon">{{ item.label }}</span>
-          <svg *ngIf="item.isIcon" class="w-5 h-5 sm:w-6 sm:h-6 transition-all duration-300" [class.fill-yellow-400]="item.active" [class.text-yellow-400]="item.active" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg *ngIf="item.isIcon" class="w-5 h-5 transition-all duration-300" [class.fill-yellow-400]="item.active" [class.text-yellow-400]="item.active" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
           </svg>
           <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full" 
                 [class.w-full]="item.active"></span>
         </a>
       </div>
-      <!-- Dark Mode Toggle Button (right side, absolute positioned) -->
-      <button 
-        (click)="toggleDarkMode()"
-        class="absolute right-0 top-1/2 transform -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-white/90 hover:text-yellow-400 transition-all duration-300 cursor-pointer group p-1"
-        title="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}">
-        <!-- Sun Icon (Light Mode) -->
-        <svg 
-          *ngIf="!isDarkMode"
-          class="w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 drop-shadow-md group-hover:scale-110"
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+
+      <!-- Desktop Controls (Right side - Dark Mode toggle) -->
+      <div class="hidden md:flex items-center gap-3">
+        <button 
+          (click)="toggleDarkMode()"
+          class="w-8 h-8 flex items-center justify-center text-white/90 hover:text-yellow-400 transition-all duration-300 cursor-pointer group p-1"
+          title="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}">
+          <!-- Sun Icon (Light Mode) -->
+          <svg 
+            *ngIf="!isDarkMode"
+            class="w-5 h-5 transition-all duration-300 drop-shadow-md group-hover:scale-110"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <!-- Moon Icon (Dark Mode) -->
+          <svg 
+            *ngIf="isDarkMode"
+            class="w-5 h-5 transition-all duration-300 drop-shadow-md group-hover:scale-110"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Controls (Hamburger & Dark Mode Toggle) -->
+      <div class="flex md:hidden items-center gap-2">
+        <button 
+          (click)="toggleDarkMode()"
+          class="w-8 h-8 flex items-center justify-center text-white/90 hover:text-yellow-400 transition-all duration-300 cursor-pointer p-1"
+          title="{{ isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}">
+          <!-- Sun Icon -->
+          <svg 
+            *ngIf="!isDarkMode"
+            class="w-5 h-5 transition-all duration-300 drop-shadow-md"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <!-- Moon Icon -->
+          <svg 
+            *ngIf="isDarkMode"
+            class="w-5 h-5 transition-all duration-300 drop-shadow-md"
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+
+        <!-- Hamburger Button -->
+        <button 
+          (click)="toggleMobileMenu()"
+          class="w-9 h-9 flex items-center justify-center text-white/95 hover:text-yellow-400 focus:outline-none transition-all duration-300 relative cursor-pointer"
+          aria-label="Toggle Menu">
+          <div class="w-6 h-5 relative flex flex-col justify-between">
+            <span 
+              [class]="isMobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''" 
+              class="w-full h-0.5 bg-current transition-all duration-300 transform origin-center"></span>
+            <span 
+              [class]="isMobileMenuOpen ? 'opacity-0 scale-x-0' : ''" 
+              class="w-full h-0.5 bg-current transition-all duration-300 transform origin-center"></span>
+            <span 
+              [class]="isMobileMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''" 
+              class="w-full h-0.5 bg-current transition-all duration-300 transform origin-center"></span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Content -->
+    <div 
+      [class]="isMobileMenuOpen ? 'max-h-[400px] opacity-100 py-4 mt-3 border-t border-white/10' : 'max-h-0 opacity-0 overflow-hidden mt-0'"
+      class="md:hidden transition-all duration-300 ease-in-out flex flex-col gap-2">
+      <a 
+        *ngFor="let item of menuItems" 
+        [routerLink]="item.route"
+        (click)="setActive(item)"
+        [class]="item.active 
+          ? 'text-yellow-400 font-semibold bg-white/10 rounded-xl px-4 py-2.5 drop-shadow-md' 
+          : 'text-white/90 hover:text-yellow-400 hover:bg-white/5 rounded-xl px-4 py-2.5 transition-all duration-300 font-medium'"
+        class="cursor-pointer text-sm flex items-center justify-between">
+        <span>{{ item.label }}</span>
+        <svg *ngIf="item.isIcon" class="w-5 h-5 transition-all duration-300" [class.fill-yellow-400]="item.active" [class.text-yellow-400]="item.active" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
         </svg>
-        <!-- Moon Icon (Dark Mode) -->
-        <svg 
-          *ngIf="isDarkMode"
-          class="w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 drop-shadow-md group-hover:scale-110"
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-        </svg>
-      </button>
+      </a>
     </div>
   </div>
 </nav>
 
-<!-- Arrow Hide Button (shown when navbar is visible, below navbar) -->
+<!-- Arrow Hide Button (shown when navbar is visible and mobile menu is closed, below navbar) -->
 <button 
-  *ngIf="isNavbarVisible"
+  *ngIf="isNavbarVisible && !isMobileMenuOpen"
   (click)="toggleNavbar()"
   class="navbar-toggle-button fixed left-1/2 transform -translate-x-1/2 flex items-center justify-center text-white/80 hover:text-yellow-400 cursor-pointer z-40 group p-2"
   style="top: calc(1rem + 70px);">

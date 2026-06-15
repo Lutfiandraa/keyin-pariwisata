@@ -22,7 +22,7 @@ import { FavoriteService } from '../../services/favorite.service';
         <div class="pt-20 sm:pt-24 pb-6 sm:pb-8 px-6 sm:px-8 lg:px-12 animate-fade-in-up">
           <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-normal leading-tight text-white drop-shadow-lg" 
               style="font-family: 'Odor Mean Chey', serif; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
-            Sewa Mobil
+            Rental Mobil
           </h1>
         </div>
 

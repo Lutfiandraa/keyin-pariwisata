@@ -1,6 +1,6 @@
 /* Smooth transition for navbar */
 nav {
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease, border-radius 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-radius: 70px;
@@ -30,6 +30,7 @@ nav::before {
   pointer-events: none;
   z-index: -1;
   border-radius: 70px;
+  transition: border-radius 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Text shadow for better readability */
@@ -98,5 +99,10 @@ nav .container > div {
 
 .navbar-toggle-button[class*="top-4"]:active svg {
   transform: scale(0.9) rotate(180deg);
+}
+
+/* When mobile menu is open, make the capsule shape fit the vertical menu */
+.navbar-expanded, .navbar-expanded::before {
+  border-radius: 24px !important;
 }
 

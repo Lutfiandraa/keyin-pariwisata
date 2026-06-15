@@ -91,6 +91,78 @@ import { HttpClient } from '@angular/common/http';
 
       <!-- Destination Modal -->
       <app-destination-modal [hotel]="selectedHotel" (close)="closeModal()"></app-destination-modal>
+
+      <!-- Floating Auth Popup (White Card & Yellow Metallic Theme with Smooth Transition) -->
+      <div [class.opacity-100]="showAuthPopup"
+           [class.opacity-0]="!showAuthPopup"
+           [class.pointer-events-none]="!showAuthPopup"
+           class="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 ease-in-out"
+           (click)="closeAuthPopup()">
+        <!-- Card Container - Pristine White with Subtle Shadow & Border -->
+        <div [class.scale-100]="showAuthPopup"
+             [class.scale-95]="!showAuthPopup"
+             [class.opacity-100]="showAuthPopup"
+             [class.opacity-0]="!showAuthPopup"
+             class="relative max-w-sm w-full overflow-hidden rounded-3xl p-8 text-center bg-white dark:bg-[#252526] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-gray-800 transition-all duration-300 ease-in-out cursor-default"
+             (click)="$event.stopPropagation()">
+          
+          <!-- Subtle Glossy/Metallic Sheen Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none"></div>
+
+          <!-- Premium KeyIn Icon Header -->
+          <img src="assets/KeyInLogo.png" alt="KeyIn Logo" class="h-16 w-auto mx-auto mb-6 drop-shadow-md object-contain">
+
+          <h3 class="text-2.5xl font-normal text-gray-900 dark:text-white mb-2 drop-shadow-sm tracking-tight" style="font-family: 'Odor Mean Chey', serif;">Welcome to <span class="bg-gradient-to-r from-yellow-500 via-amber-500 to-yellow-600 bg-clip-text text-transparent">KeyIn</span></h3>
+          <p class="text-gray-500 dark:text-gray-400 text-xs mb-8 font-semibold leading-relaxed">To keep your data and good experience, Please sign in.</p>
+
+          <!-- Authentication Options -->
+          <div class="space-y-4 relative z-10">
+            <!-- Continue with Google Button (Triggers toast notify) -->
+            <button (click)="onGoogleLogin()" 
+                    class="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-50 text-gray-800 font-bold py-3.5 px-6 rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.12)] transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer text-sm border border-gray-100"
+                    style="font-family: 'Odor Mean Chey', serif;">
+              <!-- Google "G" Logo SVG -->
+              <svg class="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+              </svg>
+              <span>Continue with Google</span>
+            </button>
+
+            <!-- Continue as Guest Button (Yellow Metallic) -->
+            <button (click)="closeAuthPopup()" 
+                    class="w-full flex items-center justify-center gap-2 text-gray-900 font-bold py-3.5 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-[0_4px_15px_rgba(245,197,24,0.3)] hover:shadow-[0_6px_25px_rgba(245,197,24,0.5)] cursor-pointer text-sm border border-yellow-400/20"
+                    style="background: linear-gradient(135deg, #FFE066 0%, #F5C518 50%, #D4A300 100%); text-shadow: 0 0.5px 1px rgba(255,255,255,0.5); font-family: 'Odor Mean Chey', serif;">
+              <span>Continue as Guest</span>
+            </button>
+          </div>
+
+          <!-- Close Icon in Top Right -->
+          <button (click)="closeAuthPopup()" 
+                  class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-[#2e2e30] cursor-pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Premium Toast Notification (Oops! Something Wrong) -->
+      <div [class.translate-y-0]="showToast"
+           [class.opacity-100]="showToast"
+           [class.-translate-y-10]="!showToast"
+           [class.opacity-0]="!showToast"
+           [class.pointer-events-none]="!showToast"
+           class="fixed top-6 left-1/2 transform -translate-x-1/2 z-[100000] flex items-center gap-2 sm:gap-3 bg-gray-900 text-white font-semibold px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-2xl shadow-2xl transition-all duration-300 ease-out border border-gray-800/80 max-w-[90vw] whitespace-nowrap text-[11px] sm:text-sm"
+           style="font-family: 'Poppins', sans-serif;">
+        <!-- Warning Icon (No Animation) -->
+        <svg class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+        <span class="whitespace-nowrap leading-none">Oops! Something Wrong</span>
+      </div>
     </div>
   `,
   styleUrl: './home.component.css'
@@ -107,6 +179,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   hasMoreToShow: boolean = false;
   isFiltered: boolean = false;
   itemsToShow: number = 15;
+
+  showAuthPopup = false;
+  showToast = false;
+  authPopupTimeout: any;
+
+  closeAuthPopup() {
+    this.showAuthPopup = false;
+  }
+
+  onGoogleLogin() {
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
+  }
 
   // Typing Animation
   typingPlaceholder: string = '';
@@ -140,10 +227,16 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.initHotels(hotels);
       }
     });
+
+    // Show auth popup after 5 seconds of browsing
+    this.authPopupTimeout = setTimeout(() => {
+      this.showAuthPopup = true;
+    }, 5000);
   }
 
   ngOnDestroy() {
     if (this.typingTimeout) clearTimeout(this.typingTimeout);
+    if (this.authPopupTimeout) clearTimeout(this.authPopupTimeout);
   }
 
   startTypingAnimation() {

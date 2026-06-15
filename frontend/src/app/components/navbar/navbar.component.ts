@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit {
   lastScrollTop = 0;
   scrollThreshold = 10; // Minimum scroll distance to trigger hide/show
   isDarkMode = false; // Dark mode state
+  isMobileMenuOpen = false; // Mobile menu toggle state
   menuItems = [
     { label: 'Home', route: '/', active: false },
     { label: 'Recommend', route: '/recommend', active: false },
@@ -65,6 +66,10 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
   ngOnInit() {
     // Set active based on current route
     this.updateActiveRoute(this.router.url);
@@ -74,6 +79,7 @@ export class NavbarComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.updateActiveRoute(event.url);
+        this.isMobileMenuOpen = false; // Close mobile menu when route changes
       });
 
     // Load dark mode preference from localStorage
@@ -114,5 +120,6 @@ export class NavbarComponent implements OnInit {
   setActive(item: any) {
     this.menuItems.forEach(menu => menu.active = false);
     item.active = true;
+    this.isMobileMenuOpen = false; // Close mobile menu when active item set
   }
 }
