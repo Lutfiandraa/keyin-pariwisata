@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, of, timer } from 'rxjs';
-import { concatMap, delay, repeat, take, tap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaceholderService {
   private destinations = [
-    "Mecca", "Georgia", "Russia", "Spain", "Swiss", "Turkey", 
-    "Cotswold", "Denmark", "Al - Ula", "Palestine", 
-    "Palm Jumeirah", "Egypt", "Monaco"
+    "Jakarta", "Bandung", "Bandar Lampung", "Bali",
+    "Badung", "Gianyar", "Karangasem", "Klungkung"
   ];
   
   private placeholderSubject = new BehaviorSubject<string>('');
@@ -29,7 +27,7 @@ export class PlaceholderService {
             i = (i + 1) % this.destinations.length;
             typeNext();
           });
-        }, 1500); // Wait 1.5s after finishing word
+        }, 1500);
       });
     };
     typeNext();
@@ -38,15 +36,15 @@ export class PlaceholderService {
   private async typeWord(word: string) {
     for (let j = 0; j <= word.length; j++) {
       this.placeholderSubject.next(word.substring(0, j) + '|');
-      await new Promise(res => setTimeout(res, 100)); // Typing speed
+      await new Promise(res => setTimeout(res, 100));
     }
-    this.placeholderSubject.next(word); // Remove cursor at end
+    this.placeholderSubject.next(word);
   }
 
   private async deleteWord(word: string) {
     for (let j = word.length; j >= 0; j--) {
       this.placeholderSubject.next(word.substring(0, j) + '|');
-      await new Promise(res => setTimeout(res, 50)); // Deleting speed
+      await new Promise(res => setTimeout(res, 50));
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { NgIf, NgForOf, NgClass, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 export interface BookingDetails {
   itemName: string;
@@ -52,11 +52,11 @@ export interface BookingDetails {
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600 dark:text-gray-400">Service Fee (5%)</span>
-                <span class="font-semibold text-gray-900 dark:text-gray-100">${{ serviceFee }}</span>
+                <span class="font-semibold text-gray-900 dark:text-gray-100">\${{ serviceFee }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600 dark:text-gray-400">Tax & Levies</span>
-                <span class="font-semibold text-gray-900 dark:text-gray-100">$0.00</span>
+                <span class="font-semibold text-gray-900 dark:text-gray-100">\$0.00</span>
               </div>
               
               <div class="pt-4 mt-2 border-t-2 border-dashed border-gray-200 dark:border-gray-700 flex justify-between items-center">

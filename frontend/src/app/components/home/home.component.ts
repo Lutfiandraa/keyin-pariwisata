@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DestinationService, Destination } from '../../services/destination.service';
+import { DestinationService, Hotel, HotelWithImage } from '../../services/destination.service';
 import { DestinationModalComponent } from '../destination-modal/destination-modal.component';
+import { HotelCardComponent } from '../hotel-card/hotel-card.component';
 import { FavoriteService } from '../../services/favorite.service';
-import { PlaceholderService } from '../../services/placeholder.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, DestinationModalComponent],
+  imports: [CommonModule, RouterModule, FormsModule, DestinationModalComponent, HotelCardComponent],
   template: `
     <div class="relative min-h-screen bg-gray-50 dark:bg-[#1e1e1e]">
       <!-- Hero Section -->
       <div class="relative h-[600px] sm:h-[500px] md:h-[550px] lg:h-[600px] overflow-hidden">
-        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" [style.background-image]="'url(assets/default.png)'" style="transform: scale(1.1);">
+        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat" [style.background-image]="'url(assets/nusa-penida-island-nature.jpg)'" style="transform: scale(1.1);">
           <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60"></div>
         </div>
         <div class="relative z-10 h-full flex flex-col items-center justify-center px-5 py-8">
@@ -23,16 +24,27 @@ import { PlaceholderService } from '../../services/placeholder.service';
             <div class="flex justify-center mb-4">
               <img src="assets/KeyInLogo.png" alt="KeyIn Logo" class="h-32 sm:h-40 lg:h-48 w-auto">
             </div>
-            <p class="text-white/90 text-center text-lg mb-10 drop-shadow">Discover the World's Grandeur with Key-In.</p>
+            <p class="text-white/90 text-center text-lg mb-10 drop-shadow">Temukan Keindahan Dunia bersama Key-In.</p>
             <!-- Search Bar -->
             <div class="bg-white dark:bg-[#252526] rounded-2xl shadow-2xl p-6">
               <div class="flex flex-col md:flex-row gap-5">
                 <div class="flex-1">
-                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Destination</label>
-                  <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" [placeholder]="(placeholderService.currentPlaceholder$ | async) || 'Where are you going?'" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 transition-all duration-300">
-                </div>
-                <div class="flex items-end">
-                  <button (click)="onSearch()" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-8 py-3 rounded-lg transition-all shadow-lg">Search</button>
+                  <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Cari Hotel</label>
+                  <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative w-full sm:w-64">
+                      <select [(ngModel)]="selectedRegion" (change)="filterHotels()" class="w-full px-4 py-3 pr-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 transition-all duration-300 appearance-none focus:outline-none focus:ring-2 focus:ring-yellow-400 text-ellipsis overflow-hidden">
+                        <option value="Semua">Semua Wilayah</option>
+                        <option value="DKI Jakarta, Indonesia">DKI Jakarta</option>
+                        <option value="Kota Bandung, Jawa Barat, Indonesia">Bandung</option>
+                        <option value="Kota Bandar Lampung, Lampung, Indonesia">Bandar Lampung</option>
+                        <option value="Bali">Bali</option>
+                      </select>
+                      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700 dark:text-gray-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                      </div>
+                    </div>
+                    <input type="text" [(ngModel)]="searchQuery" (input)="filterHotels()" [placeholder]="typingPlaceholder" class="flex-1 w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-[#1e1e1e] text-gray-900 dark:text-gray-100 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                  </div>
                 </div>
               </div>
             </div>
@@ -42,169 +54,188 @@ import { PlaceholderService } from '../../services/placeholder.service';
 
       <!-- Main Content -->
       <div class="container mx-auto px-5 sm:px-6 lg:px-8 py-16">
-        <div class="mb-8">
-          <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Popular Destinations</h2>
-          <p class="text-gray-600 dark:text-gray-400">Handpicked locations just for you</p>
+        <div class="mb-8 flex justify-between items-end">
+          <div>
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">Rekomendasi Hotel</h2>
+            <p class="text-gray-600 dark:text-gray-400">Pilihan hotel terbaik untuk Anda</p>
+          </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
-          <div *ngFor="let tour of tours; let i = index" 
-               class="bg-white dark:bg-[#252526] rounded-2xl shadow-xl overflow-hidden card-hover animate-pop-in" 
-               [class]="'stagger-' + (i + 1)"
-               style="opacity: 0; animation-fill-mode: forwards;">
-            <div class="h-48 overflow-hidden relative group">
-              <img [src]="tour.image" [alt]="tour.name" class="w-full h-full object-cover image-zoom">
-              <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-              
-              <!-- Favorite Button -->
-              <button (click)="toggleFavorite(tour, $event)" 
-                      class="absolute top-3 right-3 z-20 p-2 rounded-full transition-all duration-300 transform hover:scale-110 shadow-lg"
-                      [class]="isFavorite(tour) ? 'bg-red-500 text-white' : 'bg-white/80 text-gray-400 hover:text-red-500'">
-                <svg class="w-4 h-4" [class.fill-current]="isFavorite(tour)" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke-width="2"/></svg>
+        <div *ngIf="displayedHotels.length === 0" class="text-center py-20 text-gray-500">
+          Hotel tidak ditemukan.
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
+          <ng-container *ngFor="let hotel of displayedHotels; let i = index">
+            
+            <app-hotel-card [hotel]="hotel" (openModal)="openDestinationModal($event)"></app-hotel-card>
+
+            <!-- "Lihat Lebih Banyak" Button exactly after the 15th card -->
+            <div *ngIf="i === 14 && hasMoreToShow && !isFiltered" class="col-span-full flex justify-center my-8">
+              <button (click)="showMore()" class="bg-gray-200 dark:bg-[#3e3e42] hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold px-8 py-3 rounded-xl transition-all shadow-lg transform hover:scale-105 active:scale-95">
+                Tampilkan Lebih
               </button>
+            </div>
 
-              <div class="absolute bottom-4 left-4">
-                <h3 class="text-white font-bold text-xl drop-shadow-lg">{{ tour.name }}</h3>
-              </div>
-            </div>
-            <div class="p-4 lg:p-5">
-              <div class="flex justify-between items-center mb-4">
-                <span class="text-lg font-black text-blue-600 dark:text-yellow-400">{{ tour.price }}</span>
-                <span class="text-xs text-gray-500">{{ tour.duration }}</span>
-              </div>
-              <div class="flex gap-2">
-                <button (click)="openDestinationModal(tour.name)" class="flex-1 bg-gray-100 dark:bg-[#3e3e42] text-gray-900 dark:text-gray-100 font-semibold py-2 rounded-lg text-xs transition-all hover:bg-gray-200">Details</button>
-                <button (click)="bookNowDirect(tour)" class="flex-[2] bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 rounded-lg text-xs transition-all transform hover:scale-105 shadow-md">Book Now</button>
-              </div>
-            </div>
-          </div>
-        </div>
+          </ng-container>
 
-        <div class="mt-12 text-center">
-          <button routerLink="/recommend" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-8 py-3 rounded-lg transition-all shadow-lg">See More Destinations</button>
-        </div>
-      </div>
-
-      <!-- Bill / Receipt Modal -->
-      <div *ngIf="billDetails" class="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
-        <div class="bg-white dark:bg-[#1e1e1e] rounded-2xl shadow-2xl max-w-md w-full overflow-hidden animate-pop-in border border-gray-200 dark:border-gray-800">
-          <div class="bg-yellow-400 p-6 text-center">
-            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="3"/></svg>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-900">Booking Summary</h2>
-            <p class="text-gray-800/80 text-sm font-medium">KeyIn Travel Receipt</p>
-          </div>
-          <div class="p-6">
-            <div class="space-y-4">
-              <div class="flex justify-between items-start pb-4 border-b border-gray-100 dark:border-gray-800">
-                <div>
-                  <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Destination</p>
-                  <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">{{ billDetails.name }}</h3>
-                  <p class="text-xs text-gray-500 mt-1">{{ billDetails.dates }}</p>
-                </div>
-                <div class="text-right">
-                  <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Reference</p>
-                  <p class="text-sm font-mono font-bold text-yellow-600">#TRV-{{ bookingRef }}</p>
-                </div>
-              </div>
-              <div class="space-y-3 pt-2">
-                <div class="flex justify-between text-sm"><span class="text-gray-600 dark:text-gray-400">Base Price</span><span class="font-semibold dark:text-gray-100">{{ billDetails.price }}</span></div>
-                <div class="flex justify-between text-sm"><span class="text-gray-600 dark:text-gray-400">Service Fee (5%)</span><span class="font-semibold dark:text-gray-100">{{ billDetails.fee }}</span></div>
-                <div class="pt-4 mt-2 border-t-2 border-dashed border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                  <span class="text-lg font-bold dark:text-gray-100">Total Bill</span>
-                  <span class="text-2xl font-black text-yellow-500">{{ billDetails.total }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="mt-8 flex flex-col gap-2">
-              <button (click)="confirmPayment()" class="w-full bg-gray-900 dark:bg-yellow-400 text-white dark:text-gray-900 font-bold py-3 rounded-xl shadow-xl transition-all">Confirm & Pay</button>
-              <button (click)="billDetails = null" class="w-full text-gray-500 text-sm font-semibold py-2">Close</button>
-            </div>
+          <!-- Button Redirect ke Recommend saat data habis -->
+          <div *ngIf="displayedHotels.length > 0 && !hasMoreToShow" class="col-span-full flex justify-center mt-10 mb-4 animate-fade-in-up">
+            <a routerLink="/recommend" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-8 py-4 rounded-xl transition-all shadow-lg transform hover:scale-105 active:scale-95 flex items-center gap-3 border-2 border-yellow-500">
+              <span>Lihat Lebih Banyak Destinasi</span>
+              <svg class="w-5 h-5 animate-bounce-x" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
           </div>
         </div>
       </div>
 
       <!-- Destination Modal -->
-      <app-destination-modal [destination]="selectedDestination" (close)="closeModal()" (book)="onBookTour()"></app-destination-modal>
+      <app-destination-modal [hotel]="selectedHotel" (close)="closeModal()"></app-destination-modal>
     </div>
   `,
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
-  confirmPayment() {
-    alert('Unable to continue Confirm & Pay, your balance is 0');
-    this.billDetails = null;
-  }
+export class HomeComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
-  selectedDestination: Destination | null = null;
-  billDetails: any = null;
-  bookingRef: string = '';
+  selectedRegion: string = 'Semua';
+  selectedHotel: Hotel | null = null;
+  
+  allRandomHotels: HotelWithImage[] = [];
+  filteredHotels: HotelWithImage[] = [];
+  displayedHotels: HotelWithImage[] = [];
+  
+  hasMoreToShow: boolean = false;
+  isFiltered: boolean = false;
+  itemsToShow: number = 15;
+
+  // Typing Animation
+  typingPlaceholder: string = '';
+  placeholderTexts: string[] = [
+    "DKI Jakarta, Indonesia",
+    "Kota Bandung, Jawa Barat, Indonesia",
+    "Kota Bandar Lampung, Lampung, Indonesia",
+    "Kabupaten Badung, Bali, Indonesia",
+    "Kabupaten Gianyar, Bali, Indonesia",
+    "Kabupaten Karangasem, Bali, Indonesia",
+    "Kabupaten Klungkung, Bali, Indonesia"
+  ];
+  currentTextIndex: number = 0;
+  currentCharIndex: number = 0;
+  isDeleting: boolean = false;
+  typingSpeed: number = 100;
+  deletingSpeed: number = 50;
+  pauseTime: number = 2000;
+  typingTimeout: any;
 
   constructor(
     private destinationService: DestinationService,
     public favoriteService: FavoriteService,
-    public placeholderService: PlaceholderService
+    private http: HttpClient
   ) {}
 
-  toggleFavorite(tour: any, event: MouseEvent) {
-    event.stopPropagation();
-    this.favoriteService.toggleFavorite({
-      id: tour.id,
-      name: tour.name,
-      price: tour.price,
-      image: tour.image,
-      type: 'destination',
-      dates: tour.duration
+  ngOnInit() {
+    this.startTypingAnimation();
+    this.destinationService.hotels$.subscribe(hotels => {
+      if (hotels && hotels.length > 0) {
+        this.initHotels(hotels);
+      }
     });
   }
 
-  isFavorite(tour: any): boolean {
-    return this.favoriteService.isFavorite(tour.id, 'destination');
+  ngOnDestroy() {
+    if (this.typingTimeout) clearTimeout(this.typingTimeout);
   }
 
-  onBookTour() {
-    if (this.selectedDestination) {
-      const tour = this.tours.find(t => t.name === this.selectedDestination?.name);
-      this.bookNowDirect(tour || { name: this.selectedDestination.name, price: '$2,500', duration: 'Flexible' });
-      this.selectedDestination = null;
-    }
-  }
-
-  bookNowDirect(tour: any) {
-    const priceNum = parseFloat(tour.price.replace(/[^0-9.]/g, '')) || 2500;
-    const fee = (priceNum * 0.05).toFixed(2);
-    const total = (priceNum + parseFloat(fee)).toLocaleString();
+  startTypingAnimation() {
+    const currentText = this.placeholderTexts[this.currentTextIndex];
     
-    this.billDetails = {
-      name: tour.name,
-      price: tour.price,
-      dates: tour.duration || 'Selected Dates',
-      fee: '$' + fee,
-      total: '$' + total
-    };
-    this.bookingRef = Math.random().toString(36).substring(2, 8).toUpperCase();
+    if (this.isDeleting) {
+      this.typingPlaceholder = currentText.substring(0, this.currentCharIndex - 1);
+      this.currentCharIndex--;
+    } else {
+      this.typingPlaceholder = currentText.substring(0, this.currentCharIndex + 1);
+      this.currentCharIndex++;
+    }
+
+    let typeSpeed = this.isDeleting ? this.deletingSpeed : this.typingSpeed;
+
+    if (!this.isDeleting && this.currentCharIndex === currentText.length) {
+      typeSpeed = this.pauseTime;
+      this.isDeleting = true;
+    } else if (this.isDeleting && this.currentCharIndex === 0) {
+      this.isDeleting = false;
+      this.currentTextIndex = (this.currentTextIndex + 1) % this.placeholderTexts.length;
+      typeSpeed = 500;
+    }
+
+    this.typingTimeout = setTimeout(() => this.startTypingAnimation(), typeSpeed);
   }
 
-  onSearch() {
-    const destination = this.destinationService.getDestinationByName(this.searchQuery);
-    if (destination) {
-      this.selectedDestination = destination;
+  initHotels(allHotels: Hotel[]) {
+    // Filter hotels to prioritize those with valid coordinates and amenities
+    const qualityHotels = allHotels.filter(h => 
+      h.latitude && h.longitude && 
+      (h.swimming_pool === 'yes' || h.internet_access === 'wlan' || h.breakfast === 'yes' || h.air_conditioning === 'yes' || h.stars)
+    );
+
+    // If we have enough quality hotels, use them, otherwise fallback to all
+    let poolToUse = qualityHotels.length >= 40 ? qualityHotels : allHotels;
+
+    // Get 40 random hotels
+    const shuffled = [...poolToUse].sort(() => 0.5 - Math.random());
+    this.allRandomHotels = shuffled.slice(0, 40).map(h => ({ ...h }));
+    
+    // Fetch images for them
+    this.allRandomHotels.forEach(hotel => this.destinationService.fetchImage(hotel));
+    
+    this.filterHotels();
+  }
+
+  filterHotels() {
+    let result = this.allRandomHotels;
+    this.isFiltered = false;
+
+    if (this.selectedRegion !== 'Semua') {
+      // Grouping Bali region as one if selected "Bali"
+      if (this.selectedRegion === 'Bali') {
+         result = result.filter(h => h.region.includes('Bali'));
+      } else {
+         result = result.filter(h => h.region === this.selectedRegion);
+      }
+      this.isFiltered = true;
+    }
+
+    if (this.searchQuery && this.searchQuery.trim() !== '') {
+      const q = this.searchQuery.toLowerCase().trim();
+      result = result.filter(h => this.getHotelName(h).toLowerCase().includes(q));
+      this.isFiltered = true;
+    }
+
+    this.filteredHotels = result;
+    
+    if (this.isFiltered) {
+      this.displayedHotels = this.filteredHotels;
+      this.hasMoreToShow = false;
     } else {
-      window.location.href = '/recommend';
+      this.displayedHotels = this.filteredHotels.slice(0, this.itemsToShow);
+      this.hasMoreToShow = this.filteredHotels.length > this.itemsToShow;
     }
   }
 
-  openDestinationModal(name: string) {
-    this.selectedDestination = this.destinationService.getDestinationByName(name) || null;
+  showMore() {
+    this.itemsToShow = 40;
+    this.filterHotels();
   }
 
-  closeModal() { this.selectedDestination = null; }
+  getHotelName(hotel: Hotel): string {
+    return hotel.name || hotel.brand || 'Hotel Tidak Diketahui';
+  }
 
-  tours = [
-    { id: 1, name: 'Manhattan Penthouse', price: '$4,500', duration: '10 Days Trip', image: 'assets/manhattan.png' },
-    { id: 2, name: 'Al - Ula', price: '$3,200', duration: '10 Days Trip', image: 'assets/al-ula.png' },
-    { id: 3, name: 'Palestine', price: '$2,800', duration: '10 Days Trip', image: 'assets/palestine.png' },
-    { id: 4, name: 'Palm Jumeirah', price: '$5,500', duration: '10 Days Trip', image: 'assets/palmjumeira.png' }
-  ];
+  openDestinationModal(hotel: Hotel) {
+    this.selectedHotel = hotel;
+  }
+
+  closeModal() {
+    this.selectedHotel = null;
+  }
 }

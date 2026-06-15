@@ -10,7 +10,6 @@ export interface Car {
   features: string[];
   description: string;
   image: string;
-  price: string;
 }
 
 @Component({
@@ -46,18 +45,18 @@ export interface Car {
           <!-- Specifications -->
           <div class="grid grid-cols-2 gap-4 mb-5 sm:mb-6">
             <div class="bg-gray-50 dark:bg-[#1e1e1e] rounded-lg p-3 sm:p-4">
-              <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Capacity</div>
+              <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Kapasitas</div>
               <div class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">{{ car.capacity }}</div>
             </div>
             <div class="bg-gray-50 dark:bg-[#1e1e1e] rounded-lg p-3 sm:p-4">
-              <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Transmission</div>
+              <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Transmisi</div>
               <div class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100">{{ car.transmission }}</div>
             </div>
           </div>
 
           <!-- Features -->
           <div class="mb-5 sm:mb-6">
-            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">Key Features</h3>
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-3">Fitur Utama</h3>
             <div class="flex flex-wrap gap-2">
               <span *ngFor="let feature of car.features" 
                     class="bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full">
@@ -68,24 +67,15 @@ export interface Car {
 
           <!-- Description -->
           <div class="mb-5 sm:mb-6">
-            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Description</h3>
+            <h3 class="text-base sm:text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Deskripsi</h3>
             <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-sm sm:text-base">{{ car.description }}</p>
-          </div>
-
-          <!-- Price -->
-          <div class="bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-200 dark:border-yellow-800 rounded-lg p-4 mb-5 sm:mb-6">
-            <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1">Hire Price</div>
-            <div class="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{{ car.price }}</div>
           </div>
           
           <!-- Action Buttons -->
           <div class="flex flex-col sm:flex-row gap-3">
-            <button (click)="onBook()" class="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold px-4 py-2.5 sm:px-5 sm:py-3 rounded-lg transition-all duration-300 transform hover:scale-105 text-sm sm:text-base shadow-lg">
-              Book Now
-            </button>
             <button (click)="closeModal()" 
                     class="flex-1 bg-gray-200 dark:bg-[#3e3e42] hover:bg-gray-300 dark:hover:bg-[#454545] text-gray-900 dark:text-gray-100 font-semibold px-4 py-2.5 sm:px-5 sm:py-3 rounded-lg transition-all duration-300 text-sm sm:text-base">
-              Close
+              Tutup
             </button>
           </div>
         </div>
@@ -118,7 +108,6 @@ export interface Car {
 export class CarModalComponent implements OnChanges {
   @Input() car: Car | null = null;
   @Output() close = new EventEmitter<void>();
-  @Output() book = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['car']) {
@@ -126,12 +115,7 @@ export class CarModalComponent implements OnChanges {
     }
   }
 
-  onBook() {
-    this.book.emit();
-  }
-
   closeModal() {
     this.close.emit();
   }
 }
-

@@ -11,8 +11,8 @@ export const routes: Routes = [
     loadComponent: () => import('./components/recommend/recommend.component').then(m => m.RecommendComponent)
   },
   {
-    path: 'bundling',
-    loadComponent: () => import('./components/bundling/bundling.component').then(m => m.BundlingComponent)
+    path: 'thingstodo',
+    loadComponent: () => import('./components/thingstodo/thingstodo.component').then(m => m.ThingsTodoComponent)
   },
   {
     path: 'tour',

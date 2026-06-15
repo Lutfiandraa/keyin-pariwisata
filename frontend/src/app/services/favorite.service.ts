@@ -1,50 +1,55 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-export interface FavoriteItem {
-  id: string | number;
-  name: string;
-  price: string;
-  image: string;
-  type: 'car' | 'bundle' | 'destination';
-  dates?: string;
-}
+import { Hotel } from './destination.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FavoriteService {
-  private favoritesSubject = new BehaviorSubject<FavoriteItem[]>([]);
+  private favoritesSubject = new BehaviorSubject<Hotel[]>([]);
   favorites$ = this.favoritesSubject.asObservable();
 
   constructor() {
     // Load from localStorage if available
-    const saved = localStorage.getItem('keyin_favorites');
+    const saved = localStorage.getItem('hotel_favorites');
     if (saved) {
-      this.favoritesSubject.next(JSON.parse(saved));
+      try {
+        this.favoritesSubject.next(JSON.parse(saved));
+      } catch(e) {
+        console.error('Failed to parse favorites', e);
+      }
     }
   }
 
-  toggleFavorite(item: FavoriteItem) {
+  addFavorite(hotel: Hotel): void {
     const current = this.favoritesSubject.value;
-    const index = current.findIndex(f => f.id === item.id && f.type === item.type);
-    
-    let updated;
-    if (index >= 0) {
-      updated = current.filter((_, i) => i !== index);
-    } else {
-      updated = [...current, item];
+    if (!this.isFavorite(hotel)) {
+      const updated = [...current, hotel];
+      this.favoritesSubject.next(updated);
+      localStorage.setItem('hotel_favorites', JSON.stringify(updated));
     }
-    
+  }
+
+  removeFavorite(hotel: Hotel): void {
+    const current = this.favoritesSubject.value;
+    const updated = current.filter(f => !(f.name === hotel.name && f.latitude === hotel.latitude && f.longitude === hotel.longitude));
     this.favoritesSubject.next(updated);
-    localStorage.setItem('keyin_favorites', JSON.stringify(updated));
+    localStorage.setItem('hotel_favorites', JSON.stringify(updated));
   }
 
-  isFavorite(id: string | number, type: string): boolean {
-    return this.favoritesSubject.value.some(f => f.id === id && f.type === type);
+  toggleFavorite(hotel: Hotel): void {
+    if (this.isFavorite(hotel)) {
+      this.removeFavorite(hotel);
+    } else {
+      this.addFavorite(hotel);
+    }
   }
 
-  getFavoriteCount(): number {
-    return this.favoritesSubject.value.length;
+  getFavorites(): Hotel[] {
+    return this.favoritesSubject.value;
+  }
+
+  isFavorite(hotel: Hotel): boolean {
+    return this.favoritesSubject.value.some(f => f.name === hotel.name && f.latitude === hotel.latitude && f.longitude === hotel.longitude);
   }
 }
