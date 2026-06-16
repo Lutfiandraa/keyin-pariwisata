@@ -11,7 +11,8 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, DestinationModalComponent, RouterModule],
   template: `
-    <div class="relative min-h-screen bg-gray-50 dark:bg-[#121212]">
+    <div class="relative min-h-screen bg-cover bg-center bg-fixed" style="background-image: url('assets/nusa-penida-island-nature.jpg');">
+      <div class="absolute inset-0 bg-white/40 dark:bg-[#121212]/50 z-0"></div>
       <!-- Content Overlay -->
       <div class="relative z-10 min-h-screen flex flex-col">
         <!-- Title Section with Animation -->

@@ -10,8 +10,9 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div class="min-h-screen bg-gray-50 dark:bg-[#121212] pt-24 pb-16">
-      <div class="container mx-auto px-5 sm:px-6 lg:px-8">
+    <div class="relative min-h-screen bg-cover bg-center bg-fixed pt-24 pb-16" style="background-image: url('assets/nusa-penida-island-nature.jpg');">
+      <div class="absolute inset-0 bg-white/40 dark:bg-[#121212]/50 z-0 pointer-events-none"></div>
+      <div class="container mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         
         <!-- Header -->
         <div class="mb-8 text-center animate-fade-in-up">
